@@ -36,6 +36,10 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant !== 'default' && <VariantRibbon variant={variant}>
+            {variant === 'new-release' && "Just released!"}
+            {variant === 'on-sale' && "Sale"}
+            </VariantRibbon>}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
@@ -44,6 +48,7 @@ const ShoeCard = ({
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {salePrice && <SalePrice>{formatPrice(salePrice)}</SalePrice>}
         </Row>
       </Wrapper>
     </Link>
@@ -53,18 +58,46 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  flex: 1;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  min-width: 240px;
+`
 
 const ImageWrapper = styled.div`
   position: relative;
+  border-radius: 16px 16px 4px 4px;
+  overflow: hidden;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+`;
+
+const VariantRibbon = styled.div`
+  top: 12px;
+  right: -4px;
+  position: absolute;
+  line-height: 32px;
+  padding: 0 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
+  background: ${p => {
+    switch (p.variant) {
+      case 'on-sale': return COLORS.primary;
+      case 'new-release': return COLORS.secondary;
+      default: return undefined;
+    }
+  }}
+`
 
 const Row = styled.div`
+  display: flex;
   font-size: 1rem;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -81,6 +114,7 @@ const ColorInfo = styled.p`
 const SalePrice = styled.span`
   font-weight: ${WEIGHTS.medium};
   color: ${COLORS.primary};
+  text-decoration: line-through;
 `;
 
 export default ShoeCard;
